@@ -16,6 +16,8 @@ P = ParamSpec("P")
 
 
 class Cache:
+    __slots__ = ("redis_client", "logger")
+
     def __init__(
         self, redis_client: Redis, logger: Logger = getLogger(__name__)
     ) -> None:
