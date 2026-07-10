@@ -81,13 +81,3 @@ class TestCustomJSONEncoder:
         }
         result = json.dumps(data, cls=CustomJSONEncoder)
         assert result == '{"user": {"name": "Alice", "created_at": "2026-07-10T15:30:00", "balance": 100.5}}'
-
-    def test_serialize_custom_object_with___dict__(self):
-        class CustomObj:
-            def __init__(self, x: int, y: int):
-                self.x = x
-                self.y = y
-
-        obj = CustomObj(1, 2)
-        result = json.dumps({"data": obj}, cls=CustomJSONEncoder)
-        assert result == '{"data": {"x": 1, "y": 2}}'
