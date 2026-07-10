@@ -1,6 +1,7 @@
 # simple-redis-cache
 
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://hotpotato89.github.io/simple-redis-cache/coverage/)
+[![PyPI version](https://badge.fury.io/py/simple-redis-cache.svg)](https://badge.fury.io/py/simple-redis-cache)
 
 Простой декоратор для кэширования асинхронных функций в Redis.
 
