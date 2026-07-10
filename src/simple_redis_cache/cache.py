@@ -1,3 +1,4 @@
+import asyncio
 from functools import wraps
 import hashlib
 import inspect
@@ -95,3 +96,48 @@ class Cache:
             return cast(Callable[P, T], inner)
 
         return wrapper
+
+    async def invalidate_cache(
+        self, prefix: str = "*", timeout_seconds: int = 30
+    ) -> int:
+        if prefix == "*":
+            pattern = "cache:*"
+        else:
+            pattern = f"cache:{prefix}:*"
+
+        self.logger.debug("Starting cache invalidation by pattern: %s", pattern)
+
+        deleted_count = 0
+        cursor = 0
+        start_time = asyncio.get_event_loop().time()
+
+        try:
+            while True:
+                if asyncio.get_event_loop().time() - start_time > timeout_seconds:
+                    self.logger.warning(
+                        "Cache invalidation timed out (%s)", timeout_seconds
+                    )
+                    break
+
+                cursor, keys = await self.redis_client.scan(
+                    cursor,
+                    match=pattern,
+                    count=100,
+                )
+
+                if keys:
+                    await self.redis_client.delete(*keys)
+                    deleted_count += len(keys)
+
+                if cursor == 0:
+                    break
+
+            self.logger.info("Cache invalidated (%s keys)", deleted_count)
+            return deleted_count
+
+        except Exception as exc:
+            self.logger.error(
+                "Failed to invalidate cache",
+                exc_info=exc,
+            )
+            return deleted_count
