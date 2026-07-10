@@ -1,0 +1,9 @@
+[project]
+name = "simple-redis-cache"
+version = "0.1.0"
+description = "A library that simplifies working with Redis in Python"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "redis>=8.0.1",
+]
