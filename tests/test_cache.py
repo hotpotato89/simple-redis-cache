@@ -46,7 +46,7 @@ class TestCacheDecorator:
         assert len(keys) == 1
 
         cached = await fake_cache.redis_client.get(keys[0])
-        assert cached == "__NULL__"
+        assert cached == b"__NULL__"
 
     async def test_cache_ttl(self, fake_cache: Cache) -> None:
         @fake_cache.cache(ttl=1)
