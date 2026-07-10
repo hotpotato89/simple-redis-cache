@@ -7,7 +7,7 @@ from src.simple_redis_cache.encoder import CustomJSONEncoder
 
 
 def clean_args(args: tuple, func: Callable) -> tuple:
-    "Remove 'self/cls/mcs' from args"
+    """Remove 'self/cls/mcs' from args"""
     if not args:
         return args
 
