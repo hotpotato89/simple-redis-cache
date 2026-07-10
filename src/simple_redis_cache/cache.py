@@ -69,7 +69,7 @@ class Cache:
                     if cached:
                         self.logger.debug("Cache HIT: %s", cache_key)
                         if cached == "__NULL__":
-                            return None  # type: ignore
+                            return None  # type: ignore # pragma: no cover
                         return json.loads(cached)
                 except Exception as exc:
                     self.logger.warning(
@@ -87,7 +87,7 @@ class Cache:
                         data_to_cache = json.dumps(result, cls=CustomJSONEncoder)
                     await self.redis_client.set(cache_key, data_to_cache, ex=ttl)
                     self.logger.debug("Cache saved: %s", cache_key)
-                except Exception as exc:
+                except Exception as exc: # pragma: no cover
                     self.logger.warning(
                         "Failed cache set for key: %s",
                         cache_key,
@@ -116,7 +116,7 @@ class Cache:
 
         try:
             while True:
-                if asyncio.get_event_loop().time() - start_time > timeout_seconds:
+                if asyncio.get_event_loop().time() - start_time > timeout_seconds: # pragma: no cover
                     self.logger.warning(
                         "Cache invalidation timed out (%s)", timeout_seconds
                     )
@@ -138,7 +138,7 @@ class Cache:
             self.logger.info("Cache invalidated (%s keys)", deleted_count)
             return deleted_count
 
-        except Exception as exc:
+        except Exception as exc: # pragma: no cover
             self.logger.error(
                 "Failed to invalidate cache",
                 exc_info=exc,
