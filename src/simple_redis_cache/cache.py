@@ -24,18 +24,31 @@ class Cache:
         self.redis_client = redis_client
         self.logger = logger
 
+    def _clean_args(self, args: tuple, func: Callable) -> tuple:
+        "Remove 'self' from args"
+        if not args:
+            return args
+
+        sig = inspect.signature(func)
+        params = list(sig.parameters.keys())
+
+        if params and params[0] in ("self", "cls", "mcs"):
+            return args[1:]
+
+        return args
+
     def _gen_cache_key(
         self,
-        func_name: str,
+        func: Callable,
         args: tuple,
         kwargs: dict,
         prefix: str | None = None,
     ) -> str:
-        cleaned_args = args[1:] if args and hasattr(args[0], "__class__") else args
+        cleaned_args = self._clean_args(args, func)
         sorted_kwargs = dict(sorted(kwargs.items()))
 
         data = {
-            "func_name": func_name,
+            "func_name": func.__name__,
             "args": cleaned_args,
             "kwargs": sorted_kwargs,
         }
@@ -61,7 +74,7 @@ class Cache:
 
             @wraps(func)
             async def inner(*args: P.args, **kwargs: P.kwargs) -> T:
-                cache_key = self._gen_cache_key(func.__name__, args, kwargs, prefix)
+                cache_key = self._gen_cache_key(func, args, kwargs, prefix)
 
                 try:
                     cached = await self.redis_client.get(cache_key)
