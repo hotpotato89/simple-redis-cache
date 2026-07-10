@@ -1,5 +1,3 @@
-import pytest
-
 from src.simple_redis_cache.key_generator import clean_args, gen_cache_key
 
 
