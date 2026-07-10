@@ -1,5 +1,7 @@
 # simple-redis-cache
 
+[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://hotpotato89.github.io/simple-redis-cache/coverage/)
+
 Простой декоратор для кэширования асинхронных функций в Redis.
 
 
