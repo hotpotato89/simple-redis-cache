@@ -194,7 +194,9 @@ class TestCacheInvalidation:
             return 0, []
 
         with patch.object(fake_cache.redis_client, "scan", side_effect=slow_scan):
-            deleted = await fake_cache.invalidate_cache(prefix="test", timeout_seconds=1)
+            deleted = await fake_cache.invalidate_cache(
+                prefix="test", timeout_seconds=1
+            )
             assert deleted == 0
 
     async def test_invalidate_empty(self, fake_cache: Cache) -> None:

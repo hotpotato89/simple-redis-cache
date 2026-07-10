@@ -73,11 +73,10 @@ class TestCustomJSONEncoder:
     def test_nested_structures(self):
         dt = datetime(2026, 7, 10, 15, 30, 0)
         data = {
-            "user": {
-                "name": "Alice",
-                "created_at": dt,
-                "balance": Decimal("100.50")
-            }
+            "user": {"name": "Alice", "created_at": dt, "balance": Decimal("100.50")}
         }
         result = json.dumps(data, cls=CustomJSONEncoder)
-        assert result == '{"user": {"name": "Alice", "created_at": "2026-07-10T15:30:00", "balance": 100.5}}'
+        assert (
+            result
+            == '{"user": {"name": "Alice", "created_at": "2026-07-10T15:30:00", "balance": 100.5}}'
+        )
