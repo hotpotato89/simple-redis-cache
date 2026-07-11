@@ -3,8 +3,7 @@
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://hotpotato89.github.io/simple-redis-cache/coverage/)
 [![PyPI version](https://badge.fury.io/py/simple-redis-cache.svg)](https://badge.fury.io/py/simple-redis-cache)
 
-Простой декоратор для кэширования асинхронных функций в Redis.
-
+Простой инструмент для кэширования асинхронных и синхронных функций в Redis.
 
 ## Особенности
 
@@ -13,6 +12,8 @@
 - **Кастомный JSON-энкодер** — поддерживает `datetime`, `Decimal`, `UUID`, Pydantic-модели
 - **Устойчивость к ошибкам** — ошибки Redis не ломают приложение
 - **Гибкая настройка** — можно передать свой логгер
+- **sync/async поддержка** — можно использовать как для **синхронных**, так и для **асинхронных** функций
+- **100% покрытие** - полная уверенность в коде
 
 
 
@@ -20,6 +21,16 @@
 
 ```bash
 pip install simple-redis-cache
+```
+
+## Использование:
+
+```python
+from simple_redis_cache.sync import Cache  # Синхронный
+```
+
+```python
+from simple_redis_cache.asyncio import Cache  # Асинхронный
 ```
 
 ## Пример
