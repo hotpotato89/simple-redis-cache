@@ -1,6 +1,5 @@
 import asyncio
 from functools import wraps
-import hashlib
 import inspect
 import json
 from logging import Logger, getLogger
@@ -9,7 +8,7 @@ from typing import Callable, TypeVar, ParamSpec, cast
 from redis.asyncio import Redis
 
 from src.simple_redis_cache.encoder import CustomJSONEncoder
-from src.simple_redis_cache.key_generator import clean_args
+from src.simple_redis_cache.key_generator import gen_cache_key
 
 
 T = TypeVar("T")
@@ -25,31 +24,6 @@ class Cache:
         self.redis_client = redis_client
         self.logger = logger
 
-    def _gen_cache_key(
-        self,
-        func: Callable,
-        args: tuple,
-        kwargs: dict,
-        prefix: str | None = None,
-    ) -> str:
-        cleaned_args = clean_args(args, func)
-        sorted_kwargs = dict(sorted(kwargs.items()))
-
-        data = {
-            "func_name": func.__name__,
-            "args": cleaned_args,
-            "kwargs": sorted_kwargs,
-        }
-
-        key_hash = hashlib.sha256(
-            json.dumps(data, cls=CustomJSONEncoder, sort_keys=True).encode()
-        ).hexdigest()
-
-        base_key = f"cache:{key_hash}"
-        if prefix:
-            return f"cache:{prefix}:{key_hash}"
-        return base_key
-
     def cache(
         self, ttl: int, prefix: str | None = None
     ) -> Callable[[Callable[P, T]], Callable[P, T]]:
@@ -62,7 +36,7 @@ class Cache:
 
             @wraps(func)
             async def inner(*args: P.args, **kwargs: P.kwargs) -> T:
-                cache_key = self._gen_cache_key(func, args, kwargs, prefix)
+                cache_key = gen_cache_key(func, args, kwargs, prefix)
 
                 try:
                     cached = await self.redis_client.get(cache_key)
