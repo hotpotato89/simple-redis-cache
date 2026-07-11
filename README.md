@@ -1,7 +1,10 @@
 # simple-redis-cache
 
-[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://hotpotato89.github.io/simple-redis-cache/coverage/)
-[![PyPI version](https://badge.fury.io/py/simple-redis-cache.svg)](https://badge.fury.io/py/simple-redis-cache)
+[![PyPI](https://img.shields.io/badge/PyPI-simple--redis--cache-3776AB?logo=pypi&logoColor=white)](https://pypi.org/project/simple-redis-cache/)
+[![Redis](https://img.shields.io/badge/Redis-8.0-DC382D?logo=redis&logoColor=white)](https://redis.io/)
+[![uv](https://img.shields.io/badge/uv-0.6-blue?logo=python&logoColor=white)](https://github.com/astral-sh/uv)
+[![Pytest](https://img.shields.io/badge/Pytest-9.1-blue?logo=pytest&logoColor=white)](https://pytest.org/)
+[![Отчёт о покрытии](https://img.shields.io/badge/Отчёт_о_покрытии-онлайн-8A2BE2?logo=github-pages&logoColor=white)](https://hotpotato89.github.io/simple-redis-cache/coverage/)
 
 Простой инструмент для кэширования асинхронных и синхронных функций в Redis.
 
