@@ -2,8 +2,8 @@ from fakeredis import FakeRedis as SyncFakeRedis
 from fakeredis.aioredis import FakeRedis as AsyncFakeRedis
 import pytest
 
-from src.simple_redis_cache.asyncio.cache import Cache as AsyncCache
-from src.simple_redis_cache.sync.cache import Cache as SyncCache
+from simple_redis_cache.asyncio.cache import Cache as AsyncCache
+from simple_redis_cache.sync.cache import Cache as SyncCache
 
 
 @pytest.fixture()

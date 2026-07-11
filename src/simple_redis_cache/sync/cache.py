@@ -7,8 +7,8 @@ from typing import Callable, TypeVar, ParamSpec, cast
 
 from redis import Redis
 
-from src.simple_redis_cache.encoder import CustomJSONEncoder
-from src.simple_redis_cache.key_generator import gen_cache_key
+from simple_redis_cache.encoder import CustomJSONEncoder
+from simple_redis_cache.key_generator import gen_cache_key
 
 
 T = TypeVar("T")
