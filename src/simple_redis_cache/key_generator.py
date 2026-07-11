@@ -3,7 +3,7 @@ import inspect
 import json
 from typing import Callable
 
-from src.simple_redis_cache.encoder import CustomJSONEncoder
+from simple_redis_cache.encoder import CustomJSONEncoder
 
 
 def clean_args(args: tuple, func: Callable) -> tuple:
