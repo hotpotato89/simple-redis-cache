@@ -1,5 +1,5 @@
-from fakeredis.aioredis import FakeRedis as AsyncFakeRedis
 from fakeredis import FakeRedis as SyncFakeRedis
+from fakeredis.aioredis import FakeRedis as AsyncFakeRedis
 import pytest
 
 from src.simple_redis_cache.asyncio.cache import Cache as AsyncCache
@@ -22,5 +22,5 @@ async def fake_async_cache(async_fakeredis_client: AsyncFakeRedis) -> AsyncCache
 
 
 @pytest.fixture()
-def fake_sync_cache(async_fakeredis_client: SyncFakeRedis) -> SyncCache:
-    return SyncCache(async_fakeredis_client)
+def fake_sync_cache(sync_fakeredis_client: SyncFakeRedis) -> SyncCache:
+    return SyncCache(sync_fakeredis_client)
