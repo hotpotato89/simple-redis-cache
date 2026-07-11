@@ -1,7 +1,7 @@
 from fakeredis.aioredis import FakeRedis
 import pytest
 
-from src.simple_redis_cache.cache import Cache
+from src.simple_redis_cache.asyncio.cache import Cache
 
 
 @pytest.fixture()

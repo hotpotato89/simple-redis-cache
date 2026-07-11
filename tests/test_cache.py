@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from src.simple_redis_cache.cache import Cache
+from src.simple_redis_cache.asyncio.cache import Cache
 
 
 class TestCacheDecorator:

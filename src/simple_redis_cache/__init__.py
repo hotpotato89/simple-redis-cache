@@ -1,1 +1,1 @@
-from .cache import Cache  # noqa
+from .asyncio.cache import Cache  # noqa
