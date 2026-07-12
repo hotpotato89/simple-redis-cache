@@ -6,6 +6,7 @@ repo_name: hotpotato89/simple-redis-cache
 
 theme:
   name: material
+  logo: redis.svg
   palette:
     - scheme: default
       primary: teal
