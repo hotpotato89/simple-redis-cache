@@ -15,6 +15,8 @@ authors = [
 [dependency-groups]
 dev = [
     "fakeredis>=2.36.2",
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.6",
     "pytest-asyncio>=1.4.0",
     "pytest-cov>=7.1.0",
 ]
