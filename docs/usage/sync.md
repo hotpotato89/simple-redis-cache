@@ -1,6 +1,6 @@
 # Синхронный режим
 
-Для обычных (не асинхронных) проектов: Flask, Django, скрипты.
+Для обычных (не асинхронных) проектов: `Flask`, `Django`, `скрипты`.
 
 ## Импорт
 
@@ -18,14 +18,14 @@ cache_manager = Cache(redis_client)
 ## Кэширование функции
 
 ```python
-@cache.cache(ttl=60, prefix="user")
+@cache_manager.cache(ttl=60, prefix="user")
 def get_user(user_id: int):
     return {"id": user_id, "name": "Alice"}
 ```
 
 ## Инвалидация
 ```python
-cache.invalidate_cache(prefix="user")
+cache_manager.invalidate_cache(prefix="user")
 ```
 
 ## Полный пример
@@ -34,16 +34,16 @@ from redis import Redis
 from simple_redis_cache.sync import Cache
 
 redis = Redis()
-cache = Cache(redis)
+cache_manager = Cache(redis)
 
-@cache.cache(ttl=60, prefix="user")
+@cache_manager.cache(ttl=60, prefix="user")
 def get_user(user_id: int):
     return {"id": user_id, "name": "Alice"}
 
 print(get_user(1))   # Вычисляется
 print(get_user(1))   # Из кэша
 
-cache.invalidate_cache(prefix="user")
+cache_manager.invalidate_cache(prefix="user")
 
 print(get_user(1))   # Снова вычисляется
 ```
