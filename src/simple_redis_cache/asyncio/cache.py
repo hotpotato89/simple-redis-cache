@@ -16,6 +16,25 @@ P = ParamSpec("P")
 
 
 class Cache:
+    """
+    Класс для кэширования результатов асинхронных функций в Redis.
+
+    Args:
+        redis_client: Клиент Redis из `redis.asyncio`.
+        logger: Опциональный логгер. Если не передан, создаётся автоматически.
+
+    Example:
+        >>> from redis.asyncio import Redis
+        >>> from simple_redis_cache.asyncio import Cache
+        >>>
+        >>> redis = Redis()
+        >>> cache = Cache(redis)
+        >>>
+        >>> @cache.cache(ttl=60, prefix="user")
+        >>> async def get_user(user_id: int) -> dict:
+        ...     return {"id": user_id, "name": "Alice"}
+    """
+
     __slots__ = ("redis_client", "logger")
 
     def __init__(
@@ -27,6 +46,25 @@ class Cache:
     def cache(
         self, ttl: int, prefix: str | None = None
     ) -> Callable[[Callable[P, T]], Callable[P, T]]:
+        """
+        Декоратор для кэширования асинхронной функции.
+
+        Args:
+            ttl: Время жизни кэша в секундах.
+            prefix: Опциональный префикс для ключа кэша.
+
+        Returns:
+            Декоратор, оборачивающий функцию с кэшированием.
+
+        Raises:
+            TypeError: Если функция синхронная, а не асинхронная.
+
+        Example:
+            >>> @cache.cache(ttl=60, prefix="user")
+            >>> async def get_user(user_id: int) -> dict:
+            ...     return {"id": user_id, "name": "Alice"}
+        """
+
         def wrapper(func: Callable[P, T]) -> Callable[P, T]:
             if not inspect.iscoroutinefunction(func):
                 raise TypeError(
@@ -77,6 +115,20 @@ class Cache:
     async def invalidate_cache(
         self, prefix: str = "*", timeout_seconds: int = 30
     ) -> int:
+        """
+        Удаляет все ключи кэша по префиксу.
+
+        Args:
+            prefix: Префикс для удаления. Если `"*"` — удаляет все ключи.
+            timeout_seconds: Максимальное время выполнения операции (сек).
+
+        Returns:
+            Количество удалённых ключей.
+
+        Example:
+            >>> await cache.invalidate_cache(prefix="user")
+            42
+        """
         if prefix == "*":
             pattern = "cache:*"
         else:
