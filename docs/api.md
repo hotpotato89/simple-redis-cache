@@ -15,13 +15,16 @@ def __init__(self, redis_client: Redis, logger: Logger | None = None) -> None
 ### `cache`
 
 ```python
-def cache(self, ttl: int, prefix: str | None = None) -> Callable
+def cache(self, ttl: int, prefix: str | None = None, use_pickle: bool = False) -> Callable
 ```
 
 #### Аргументы
 
 * `ttl` - время жизни кэша в секундах.
 * `prefix` - опциональный префикс для ключа.
+* `use_pickle` - использовать `pickle` для сериализации.
+
+> Важно: Не используйте decode_responses=True в Redis-клиенте при включённом use_pickle=True.
 
 ### `invalidate_cache`
 
