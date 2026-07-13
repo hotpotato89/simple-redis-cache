@@ -30,4 +30,5 @@ async def get_user(user_id: int):
 * [Установка](installation.md)
 * [Синхронный режим](usage/sync.md)
 * [Асинхронный режим](usage/async.md)
+* [Изменения](changelog.md)
 * [API Reference](api.md)
