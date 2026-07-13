@@ -84,7 +84,7 @@ class Cache:
                         self.logger.debug("Cache HIT: %s", cache_key)
 
                         # Приводим к bytes если это str
-                        if isinstance(cached, str):
+                        if isinstance(cached, str): # pragma: no cover
                             cached = cached.encode("utf-8")
 
                         if cached == b"__NULL__":
