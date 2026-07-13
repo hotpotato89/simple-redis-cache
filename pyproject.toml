@@ -1,6 +1,6 @@
 [project]
 name = "simple-redis-cache"
-version = "1.0.2"
+version = "1.1.0"
 description = "A library that simplifies working with Redis in Python"
 readme = "README.md"
 requires-python = ">=3.10"
