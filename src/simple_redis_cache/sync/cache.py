@@ -91,7 +91,7 @@ class Cache:
                             return None  # type: ignore
                         if cached.startswith(b"PICKLE:"):  # type: ignore
                             return pickle.loads(cached[7:])  # type: ignore
-                        return json.loads(cached.decode("utf-8")) # type: ignore
+                        return json.loads(cached.decode("utf-8"))  # type: ignore
                 except Exception as exc:
                     self.logger.warning(
                         "Failed cache get for key: %s",
