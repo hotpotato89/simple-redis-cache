@@ -8,7 +8,7 @@ from uuid import UUID
 import pytest
 from pydantic import BaseModel
 
-from src.simple_redis_cache.asyncio.cache import Cache
+from simple_redis_cache.asyncio.cache import Cache
 
 
 class User(BaseModel):
