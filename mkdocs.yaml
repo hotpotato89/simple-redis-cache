@@ -52,4 +52,5 @@ nav:
       - Синхронный режим: usage/sync.md
       - Асинхронный режим: usage/async.md
   - Примеры: examples.md
+  - Изменения: changelog.md
   - API Reference: api.md

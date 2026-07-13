@@ -23,6 +23,16 @@ def get_user(user_id: int):
     return {"id": user_id, "name": "Alice"}
 ```
 
+### Хранение сложных объектов
+
+Для типов, которые не сериализуются в JSON, используйте `pickle`:
+
+```python
+@cache_manager.cache(ttl=60, prefix="user", use_pickle=True)
+def get_user(user_id: int) -> User:
+    return User(id=user_id, name="Alice")
+```
+
 ## Инвалидация
 ```python
 cache_manager.invalidate_cache(prefix="user")
