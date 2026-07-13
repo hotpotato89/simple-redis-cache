@@ -4,6 +4,7 @@ import inspect
 import json
 from logging import Logger, getLogger
 from typing import Callable, TypeVar, ParamSpec, cast
+import pickle
 
 from redis.asyncio import Redis
 
@@ -44,7 +45,7 @@ class Cache:
         self.logger = logger
 
     def cache(
-        self, ttl: int, prefix: str | None = None
+        self, ttl: int, prefix: str | None = None, use_pickle: bool = False
     ) -> Callable[[Callable[P, T]], Callable[P, T]]:
         """
         Декоратор для кэширования асинхронной функции.
@@ -52,6 +53,7 @@ class Cache:
         Args:
             ttl: Время жизни кэша в секундах.
             prefix: Опциональный префикс для ключа кэша.
+            use_pickle: Использование pickle в качестве сериализатора
 
         Returns:
             Декоратор, оборачивающий функцию с кэшированием.
@@ -60,7 +62,7 @@ class Cache:
             TypeError: Если функция синхронная, а не асинхронная.
 
         Example:
-            >>> @cache.cache(ttl=60, prefix="user")
+            >>> @cache.cache(ttl=60, prefix="user", use_pickle=True)
             >>> async def get_user(user_id: int) -> dict:
             ...     return {"id": user_id, "name": "Alice"}
         """
@@ -78,11 +80,18 @@ class Cache:
 
                 try:
                     cached = await self.redis_client.get(cache_key)
-                    if cached:
+                    if cached is not None:
                         self.logger.debug("Cache HIT: %s", cache_key)
-                        if cached == "__NULL__":
-                            return None  # type: ignore # pragma: no cover
-                        return json.loads(cached)
+
+                        # Приводим к bytes если это str
+                        if isinstance(cached, str): # pragma: no cover
+                            cached = cached.encode("utf-8")
+
+                        if cached == b"__NULL__":
+                            return None  # type: ignore
+                        if cached.startswith(b"PICKLE:"):  # type: ignore
+                            return pickle.loads(cached[7:])  # type: ignore
+                        return json.loads(cached.decode("utf-8"))  # type: ignore
                 except Exception as exc:
                     self.logger.warning(
                         "Failed cache get for key: %s",
@@ -94,9 +103,12 @@ class Cache:
 
                 try:
                     if result is None:
-                        data_to_cache = "__NULL__"
+                        data_to_cache = b"__NULL__"
                     else:
-                        data_to_cache = json.dumps(result, cls=CustomJSONEncoder)
+                        if use_pickle:
+                            data_to_cache = b"PICKLE:" + pickle.dumps(result)
+                        else:
+                            data_to_cache = json.dumps(result, cls=CustomJSONEncoder)
                     await self.redis_client.set(cache_key, data_to_cache, ex=ttl)
                     self.logger.debug("Cache saved: %s", cache_key)
                 except Exception as exc:  # pragma: no cover
