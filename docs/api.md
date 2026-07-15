@@ -63,7 +63,7 @@ await cache.invalidate_cache(prefix="user")
 * `datetime` -> ISO-строка
 * `Decimal` -> float
 * `UUID` -> строка
-* `Pydantic-модельи` -> `model_dump()`
+* `Pydantic-модели` -> `model_dump()`
 
 ### Пример
 
