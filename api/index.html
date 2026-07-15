@@ -1079,7 +1079,7 @@
 </ul>
 <p><strong>Возвращает</strong>: удаленное количество ключей.</p>
 <h2 id="cache_2"><code>Cache</code> (асинхронный)</h2>
-<p>Аналогичный, но методы синхронные</p>
+<p>Аналогичный, но методы асинхронные</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">simple_redis_cache.asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cache</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">cache</span> <span class="o">=</span> <span class="n">Cache</span><span class="p">(</span><span class="n">redis</span><span class="p">)</span>
@@ -1091,11 +1091,13 @@
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">await</span> <span class="n">cache</span><span class="o">.</span><span class="n">invalidate_cache</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="customjsonencoder"><code>CustomJSONEncoder</code></h2>
-<p>Кастомный JSON-энкодер для поддержки:
-* <code>datetime</code> -&gt; ISO-строка
-* <code>Decimal</code> -&gt; float
-* <code>UUID</code> -&gt; строка
-* <code>Pydantic-модельи</code> -&gt; <code>model_dump()</code></p>
+<p>Кастомный JSON-энкодер для поддержки:</p>
+<ul>
+<li><code>datetime</code> -&gt; ISO-строка</li>
+<li><code>Decimal</code> -&gt; float</li>
+<li><code>UUID</code> -&gt; строка</li>
+<li><code>Pydantic-модельи</code> -&gt; <code>model_dump()</code></li>
+</ul>
 <h3 id="_4">Пример</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
