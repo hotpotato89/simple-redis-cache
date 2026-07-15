@@ -42,7 +42,7 @@ def invalidate_cache(self, prefix: str = "*", timeout_seconds: int = 30) -> int
 
 ## `Cache` (асинхронный)
 
-Аналогичный, но методы синхронные
+Аналогичный, но методы асинхронные
 
 ```python
 from simple_redis_cache.asyncio import Cache
@@ -59,6 +59,7 @@ await cache.invalidate_cache(prefix="user")
 ## `CustomJSONEncoder`
 
 Кастомный JSON-энкодер для поддержки:
+
 * `datetime` -> ISO-строка
 * `Decimal` -> float
 * `UUID` -> строка
@@ -74,4 +75,3 @@ from simple_redis_cache.encoder import CustomJSONEncoder
 data = {"created": datetime.now()}
 json.dumps(data, cls=CustomJSONEncoder)
 ```
-
