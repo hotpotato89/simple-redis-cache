@@ -48,14 +48,16 @@ from simple_redis_cache.sync import Cache
 redis = Redis()
 cache_manager = Cache(redis)
 
+
 @cache_manager.cache(ttl=60, prefix="user")
 def get_user(user_id: int):
     return {"id": user_id, "name": "Alice"}
 
-print(get_user(1))   # Вычисляется
-print(get_user(1))   # Из кэша
+
+print(get_user(1))  # Вычисляется
+print(get_user(1))  # Из кэша
 
 cache_manager.invalidate_cache(prefix="user")
 
-print(get_user(1))   # Снова вычисляется
+print(get_user(1))  # Снова вычисляется
 ```

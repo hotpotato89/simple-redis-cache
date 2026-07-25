@@ -51,9 +51,11 @@ from simple_redis_cache.asyncio import Cache
 
 cache = Cache(redis)
 
+
 @cache.cache(ttl=60, prefix="user")
 async def get_user(user_id: int):
     return {"id": user_id}
+
 
 await cache.invalidate_cache(prefix="user")
 ```

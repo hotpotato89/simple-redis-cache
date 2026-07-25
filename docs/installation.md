@@ -25,5 +25,6 @@ poetry add simple-redis-cache
 
 ```python
 import simple_redis_cache
+
 print(simple_redis_cache.__version__)
 ```

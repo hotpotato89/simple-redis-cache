@@ -9,9 +9,11 @@ from simple_redis_cache.sync import Cache
 redis = Redis()
 cache = Cache(redis)
 
+
 @cache.cache(ttl=3600, prefix="product")
 def get_product(product_id: int):
     return {"id": product_id, "name": "Laptop", "price": 999.99}
+
 
 print(get_product(1))  # 1 час в кэше
 ```
@@ -26,17 +28,20 @@ from simple_redis_cache.asyncio import Cache
 redis = Redis()
 cache = Cache(redis)
 
+
 @cache.cache(ttl=60, prefix="user")
 async def get_user(user_id: int):
     return {"id": user_id, "name": "Alice"}
 
+
 async def main():
-    print(await get_user(1))          # Из БД
-    print(await get_user(1))          # Из кэша
+    print(await get_user(1))  # Из БД
+    print(await get_user(1))  # Из кэша
 
     await cache.invalidate_cache(prefix="user")  # Очистка
 
-    print(await get_user(1))          # Снова из БД
+    print(await get_user(1))  # Снова из БД
+
 
 asyncio.run(main())
 ```
@@ -50,13 +55,16 @@ from simple_redis_cache.sync import Cache
 redis = Redis()
 cache = Cache(redis)
 
+
 @cache.cache(ttl=60, prefix="user")
 def get_user(user_id: int):
     return {"id": user_id, "name": "Alice"}
 
+
 @cache.cache(ttl=60, prefix="post")
 def get_post(post_id: int):
     return {"id": post_id, "title": "Hello"}
+
 
 get_user(1)
 get_post(1)
@@ -78,9 +86,11 @@ logger = logging.getLogger("my_app")
 redis = Redis()
 cache = Cache(redis, logger=logger)
 
+
 @cache.cache(ttl=60, prefix="user")
 def get_user(user_id: int):
     return {"id": user_id, "name": "Alice"}
+
 
 get_user(1)  # Логи будут выводиться через твой логгер
 ```

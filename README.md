@@ -47,9 +47,11 @@ from simple_redis_cache import Cache
 redis = Redis()
 cache = Cache(redis)
 
+
 @cache.cache(ttl=60, prefix="user")
 async def get_user(user_id: int):
     return {"id": user_id, "name": "Alice"}
+
 
 # Первый вызов — вычисляется, второй — из кэша
 r1 = await get_user(1)
