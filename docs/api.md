@@ -24,6 +24,8 @@ def cache(self, ttl: int, prefix: str | None = None, use_pickle: bool = False) -
 * `prefix` - опциональный префикс для ключа.
 * `use_pickle` - использовать `pickle` для сериализации.
 
+> Опасно: Не используйте `pickle` для недоверенных данных. Это может выполнить произвольный код.
+
 > Важно: Не используйте decode_responses=True в Redis-клиенте при включённом use_pickle=True.
 
 ### `invalidate_cache`

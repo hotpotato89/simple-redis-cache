@@ -27,6 +27,8 @@ def get_user(user_id: int):
 
 Для типов, которые не сериализуются в JSON, используйте `pickle`:
 
+> Опасно: Не используйте `pickle` для недоверенных данных. Это может выполнить произвольный код.
+
 ```python
 @cache_manager.cache(ttl=60, prefix="user", use_pickle=True)
 def get_user(user_id: int) -> User:
