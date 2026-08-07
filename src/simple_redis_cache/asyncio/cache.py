@@ -120,18 +120,21 @@ class Cache:
                 result = await func(*args, **kwargs)
 
                 try:
-                    if result is None and cache_none:
-                        data_to_cache = b"__NULL__"
+                    if result is None and not cache_none:
+                        pass
                     else:
-                        if use_pickle:
-                            data_to_cache = b"PICKLE:" + pickle.dumps(result)
+                        if result is None and cache_none:
+                            data_to_cache = b"__NULL__"
                         else:
-                            data_to_cache = json.dumps(
-                                result,
-                                cls=CustomJSONEncoder,
-                            )
-                    await self.redis_client.set(cache_key, data_to_cache, ex=ttl)
-                    self.logger.debug("Cache saved: %s", cache_key)
+                            if use_pickle:
+                                data_to_cache = b"PICKLE:" + pickle.dumps(result)
+                            else:
+                                data_to_cache = json.dumps(
+                                    result,
+                                    cls=CustomJSONEncoder,
+                                )
+                        await self.redis_client.set(cache_key, data_to_cache, ex=ttl)
+                        self.logger.debug("Cache saved: %s", cache_key)
                 except Exception as exc:  # pragma: no cover
                     self.logger.warning(
                         "Failed cache set for key: %s",
