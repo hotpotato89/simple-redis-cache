@@ -1,16 +1,16 @@
 import asyncio
-from functools import wraps
 import inspect
 import json
-from logging import Logger, getLogger
-from typing import Callable, TypeVar, ParamSpec, cast
 import pickle
+from collections.abc import Callable
+from functools import wraps
+from logging import Logger, getLogger
+from typing import ParamSpec, TypeVar, cast
 
 from redis.asyncio import Redis
 
 from simple_redis_cache.encoder import CustomJSONEncoder
 from simple_redis_cache.key_generator import gen_cache_key
-
 
 T = TypeVar("T")
 P = ParamSpec("P")
@@ -36,7 +36,7 @@ class Cache:
         ...     return {"id": user_id, "name": "Alice"}
     """
 
-    __slots__ = ("redis_client", "logger")
+    __slots__ = ("logger", "redis_client")
 
     def __init__(
         self, redis_client: Redis, logger: Logger = getLogger(__name__)
@@ -45,7 +45,11 @@ class Cache:
         self.logger = logger
 
     def cache(
-        self, ttl: int, prefix: str | None = None, use_pickle: bool = False
+        self,
+        ttl: int,
+        prefix: str | None = None,
+        use_pickle: bool = False,
+        cache_none: bool = True,
     ) -> Callable[[Callable[P, T]], Callable[P, T]]:
         """
         Декоратор для кэширования асинхронной функции.

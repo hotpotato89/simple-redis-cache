@@ -1,16 +1,16 @@
-import time
-from functools import wraps
 import inspect
 import json
-from logging import Logger, getLogger
-from typing import Callable, TypeVar, ParamSpec, cast
 import pickle
+import time
+from collections.abc import Callable
+from functools import wraps
+from logging import Logger, getLogger
+from typing import ParamSpec, TypeVar, cast
 
 from redis import Redis
 
 from simple_redis_cache.encoder import CustomJSONEncoder
 from simple_redis_cache.key_generator import gen_cache_key
-
 
 T = TypeVar("T")
 P = ParamSpec("P")
@@ -36,7 +36,7 @@ class Cache:
         ...     return {"id": user_id, "name": "Alice"}
     """
 
-    __slots__ = ("redis_client", "logger")
+    __slots__ = ("logger", "redis_client")
 
     def __init__(
         self, redis_client: Redis, logger: Logger = getLogger(__name__)

@@ -1,8 +1,8 @@
-import time
-from unittest.mock import patch
-import pickle
 import datetime
+import pickle
+import time
 from decimal import Decimal
+from unittest.mock import patch
 from uuid import UUID
 
 import pytest

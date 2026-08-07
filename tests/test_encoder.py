@@ -22,7 +22,7 @@ class TestCustomJSONEncoder:
     def test_uuid_serialization(self):
         uid = uuid4()
         result = json.dumps({"id": uid}, cls=CustomJSONEncoder)
-        expected = f'{{"id": "{str(uid)}"}}'
+        expected = f'{{"id": "{uid!s}"}}'
         assert result == expected
 
     def test_pydantic_model_serialization(self):
