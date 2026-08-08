@@ -1,7 +1,7 @@
 import hashlib
 import inspect
 import json
-from typing import Callable
+from collections.abc import Callable
 
 from simple_redis_cache.encoder import CustomJSONEncoder
 
