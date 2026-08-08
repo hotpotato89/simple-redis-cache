@@ -33,6 +33,14 @@ class UserWithDateTime(BaseModel):
     created_at: datetime.datetime
 
 
+class MyData:
+    def __init__(self, value: int):
+        self.value = value
+
+    def __eq__(self, other):
+        return isinstance(other, MyData) and self.value == other.value
+
+
 class TestCacheDecorator:
     async def test_cache_hit(self, fake_async_cache: Cache) -> None:
         @fake_async_cache.cache(ttl=60)
@@ -451,3 +459,278 @@ class TestCachePickle:
 
         keys = await fake_async_cache.redis_client.keys("cache:pickle_test:*")
         assert len(keys) == 0
+
+
+class TestCacheNoneParameter:
+    """Тесты для параметра cache_none."""
+
+    async def test_cache_none_default_true(self, fake_async_cache: Cache) -> None:
+        """По умолчанию (cache_none=True) None должен кэшироваться."""
+
+        @fake_async_cache.cache(ttl=60)
+        async def test_func() -> None:
+            return None
+
+        result = await test_func()
+        assert result is None
+
+        keys = await fake_async_cache.redis_client.keys("cache:*")
+        assert len(keys) == 1
+
+        cached = await fake_async_cache.redis_client.get(keys[0])
+        assert cached == b"__NULL__"
+
+    async def test_cache_none_true_explicit(self, fake_async_cache: Cache) -> None:
+        """Явное cache_none=True должно кэшировать None."""
+
+        @fake_async_cache.cache(ttl=60, cache_none=True)
+        async def test_func() -> None:
+            return None
+
+        result = await test_func()
+        assert result is None
+
+        keys = await fake_async_cache.redis_client.keys("cache:*")
+        assert len(keys) == 1
+
+        cached = await fake_async_cache.redis_client.get(keys[0])
+        assert cached == b"__NULL__"
+
+    async def test_cache_none_false_does_not_cache(
+        self, fake_async_cache: Cache
+    ) -> None:
+        """cache_none=False должен НЕ кэшировать None."""
+
+        @fake_async_cache.cache(ttl=60, cache_none=False)
+        async def test_func() -> None:
+            return None
+
+        # Первый вызов — функция выполняется, None НЕ сохраняется
+        result1 = await test_func()
+        assert result1 is None
+
+        # Ключа быть не должно
+        keys = await fake_async_cache.redis_client.keys("cache:*")
+        assert len(keys) == 0
+
+        # Второй вызов — снова выполняется функция (т.к. в кэше нет)
+        result2 = await test_func()
+        assert result2 is None
+
+        # Ключа всё ещё нет
+        keys = await fake_async_cache.redis_client.keys("cache:*")
+        assert len(keys) == 0
+
+    async def test_cache_none_false_with_real_value(
+        self, fake_async_cache: Cache
+    ) -> None:
+        """cache_none=False должен кэшировать реальные значения."""
+
+        @fake_async_cache.cache(ttl=60, cache_none=False)
+        async def test_func(x: int):
+            if x == 0:
+                return None
+            return x * 2
+
+        # Вызов с None — не кэшируется
+        await test_func(0)
+        keys = await fake_async_cache.redis_client.keys("cache:*")
+        assert len(keys) == 0
+
+        # Вызов с реальным значением — кэшируется
+        await test_func(5)
+        keys = await fake_async_cache.redis_client.keys("cache:*")
+        assert len(keys) == 1
+
+        cached = await fake_async_cache.redis_client.get(keys[0])
+        assert cached == b"10"
+
+    async def test_cache_none_false_hit_skip_none(
+        self, fake_async_cache: Cache
+    ) -> None:
+        """С cache_none=False: если None не закэширован, функция выполняется снова."""
+        call_count = 0
+
+        @fake_async_cache.cache(ttl=60, cache_none=False)
+        async def test_func(x: int):
+            nonlocal call_count
+            call_count += 1
+            if x == 0:
+                return None
+            return x * 2
+
+        # Первый вызов с None — функция выполняется
+        result = await test_func(0)
+        assert result is None
+        assert call_count == 1
+
+        # Второй вызов с None — функция выполняется снова (кэша нет)
+        result = await test_func(0)
+        assert result is None
+        assert call_count == 2
+
+        # Вызов с реальным значением — кэшируется
+        result = await test_func(5)
+        assert result == 10
+        assert call_count == 3
+
+        # Повторный вызов с реальным значением — из кэша
+        result = await test_func(5)
+        assert result == 10
+        assert call_count == 3  # Не увеличился
+
+    async def test_cache_none_false_with_different_args(
+        self, fake_async_cache: Cache
+    ) -> None:
+        """cache_none=False: разные аргументы — разные ключи."""
+
+        @fake_async_cache.cache(ttl=60, cache_none=False)
+        async def test_func(x: int):
+            if x % 2 == 0:
+                return None
+            return x
+
+        # Чётные — не кэшируются
+        await test_func(2)
+        await test_func(4)
+
+        # Нечётные — кэшируются
+        await test_func(1)
+        await test_func(3)
+
+        keys = await fake_async_cache.redis_client.keys("cache:*")
+        # Только 2 ключа (для 1 и 3)
+        assert len(keys) == 2
+
+        # Проверяем, что чётные не сохранились
+        for key in keys:
+            cached = await fake_async_cache.redis_client.get(key)
+            assert cached != b"__NULL__"
+
+    async def test_cache_none_false_with_prefix(self, fake_async_cache: Cache) -> None:
+        """cache_none=False с префиксом."""
+
+        @fake_async_cache.cache(ttl=60, prefix="test", cache_none=False)
+        async def test_func(x: int):
+            if x == 0:
+                return None
+            return x
+
+        await test_func(0)
+        keys = await fake_async_cache.redis_client.keys("cache:test:*")
+        assert len(keys) == 0
+
+        await test_func(42)
+        keys = await fake_async_cache.redis_client.keys("cache:test:*")
+        assert len(keys) == 1
+
+    async def test_cache_none_with_pickle(self, fake_async_cache: Cache) -> None:
+        """cache_none=True с use_pickle=True — None как __NULL__."""
+
+        @fake_async_cache.cache(ttl=60, use_pickle=True, cache_none=True)
+        async def test_func() -> None:
+            return None
+
+        result = await test_func()
+        assert result is None
+
+        keys = await fake_async_cache.redis_client.keys("cache:*")
+        assert len(keys) == 1
+
+        cached = await fake_async_cache.redis_client.get(keys[0])
+        assert cached == b"__NULL__"  # Не PICKLE, а именно __NULL__
+
+    async def test_cache_none_false_with_pickle(self, fake_async_cache: Cache) -> None:
+        """cache_none=False с use_pickle=True — None не кэшируется."""
+
+        @fake_async_cache.cache(ttl=60, use_pickle=True, cache_none=False)
+        async def test_func() -> None:
+            return None
+
+        await test_func()
+        keys = await fake_async_cache.redis_client.keys("cache:*")
+        assert len(keys) == 0
+
+    async def test_cache_none_false_with_pickle_real_value(
+        self, fake_async_cache: Cache
+    ) -> None:
+        """cache_none=False с use_pickle=True — реальное значение кэшируется через pickle."""
+
+        @fake_async_cache.cache(ttl=60, use_pickle=True, cache_none=False)
+        async def test_func(x: int):
+            if x == 0:
+                return None
+            return MyData(x)
+
+        # None — не кэшируется
+        await test_func(0)
+        keys = await fake_async_cache.redis_client.keys("cache:*")
+        assert len(keys) == 0
+
+        # Реальное значение — кэшируется через pickle
+        result = await test_func(42)
+        assert isinstance(result, MyData)
+        assert result.value == 42
+
+        keys = await fake_async_cache.redis_client.keys("cache:*")
+        assert len(keys) == 1
+
+        cached = await fake_async_cache.redis_client.get(keys[0])
+        assert cached.startswith(b"PICKLE:")
+
+        # Проверяем, что восстановление работает
+        result2 = await test_func(42)
+        assert isinstance(result2, MyData)
+        assert result2.value == 42
+
+    async def test_cache_none_false_with_invalidation(
+        self, fake_async_cache: Cache
+    ) -> None:
+        """cache_none=False: инвалидация работает корректно."""
+
+        @fake_async_cache.cache(ttl=60, prefix="test", cache_none=False)
+        async def test_func(x: int):
+            if x == 0:
+                return None
+            return x * 2
+
+        # Создаём только реальные значения
+        await test_func(5)
+        await test_func(10)
+
+        keys_before = await fake_async_cache.redis_client.keys("cache:test:*")
+        assert len(keys_before) == 2
+
+        # Инвалидация
+        deleted = await fake_async_cache.invalidate_cache(prefix="test")
+        assert deleted == 2
+
+        keys_after = await fake_async_cache.redis_client.keys("cache:test:*")
+        assert len(keys_after) == 0
+
+    async def test_cache_none_false_with_cache_hit_real_value(
+        self, fake_async_cache: Cache
+    ) -> None:
+        """С cache_none=False реальные значения успешно читаются из кэша."""
+
+        @fake_async_cache.cache(ttl=60, cache_none=False)
+        async def test_func(x: int):
+            return x * 2
+
+        # Первый вызов — сохраняем в кэш
+        await test_func(5)
+
+        # Подменяем функцию, чтобы проверить, что второй вызов идёт из кэша
+        original_func = test_func.__wrapped__
+
+        async def modified_func(x: int):
+            return x * 100  # Другой результат
+
+        test_func.__wrapped__ = modified_func
+
+        # Второй вызов — должен вернуть 10 из кэша, а не 500
+        result = await test_func(5)
+        assert result == 10
+
+        # Восстанавливаем
+        test_func.__wrapped__ = original_func
