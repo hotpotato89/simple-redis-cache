@@ -15,7 +15,7 @@ def __init__(self, redis_client: Redis, logger: Logger | None = None) -> None
 ### `cache`
 
 ```python
-def cache(self, ttl: int, prefix: str | None = None, use_pickle: bool = False) -> Callable
+def cache(self, ttl: int, prefix: str | None = None, use_pickle: bool = False, cache_none: bool = True) -> Callable
 ```
 
 #### Аргументы
@@ -23,6 +23,7 @@ def cache(self, ttl: int, prefix: str | None = None, use_pickle: bool = False) -
 * `ttl` - время жизни кэша в секундах.
 * `prefix` - опциональный префикс для ключа.
 * `use_pickle` - использовать `pickle` для сериализации.
+* `cache_none` - кэшировать значение `None`
 
 > Опасно: Не используйте `pickle` для недоверенных данных. Это может выполнить произвольный код.
 
@@ -38,7 +39,7 @@ def invalidate_cache(self, prefix: str = "*", timeout_seconds: int = 30) -> int
 #### Аргументы
 
 * `prefix` - префикс для удаления. `"*"` - удаляет всё.
-* `timeout_seconds` - времяб отведенное на выполнение инвалидации.
+* `timeout_seconds` - время, отведенное на выполнение инвалидации.
 
 **Возвращает**: удаленное количество ключей.
 
