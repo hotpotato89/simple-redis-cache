@@ -82,7 +82,7 @@ class TestSerializer:
 
     def test_dumps_loads_pickle(self):
         """Сериализация через pickle."""
-        obj = CustomObject(42, "test")  # ← класс на уровне модуля
+        obj = CustomObject(42, "test")
         dumped = Serializer.dumps(obj, use_pickle=True)
 
         assert dumped.startswith(b"PICKLE:")
@@ -241,3 +241,130 @@ class TestSerializer:
     def test_json_encoder_class(self):
         """Проверка, что используется правильный JSON-кодировщик."""
         assert Serializer.JSON_ENCODER == CustomJSONEncoder
+
+    # === Тесты для компрессии LZ4 ===
+
+    def test_compress_small_data(self):
+        """Данные меньше порога не сжимаются."""
+        data = {"key": "value"}
+        dumped = Serializer.dumps(data, compress=True, compress_threshold=1024)
+        assert not dumped.startswith(b"LZ4:")
+
+    def test_compress_large_data(self):
+        """Данные больше порога сжимаются."""
+        data = {"key": "x" * 10000}
+        dumped = Serializer.dumps(data, compress=True, compress_threshold=1024)
+        assert dumped.startswith(b"LZ4:")
+        loaded = Serializer.loads(dumped)
+        assert loaded == data
+
+    def test_compress_with_pickle(self):
+        """Сжатие + pickle."""
+        data = {"x": 1, "y": 2, "z": "a" * 10000}
+        dumped = Serializer.dumps(
+            data,
+            use_pickle=True,
+            compress=True,
+            compress_threshold=1024,
+        )
+        assert dumped.startswith(b"LZ4:")
+        loaded = Serializer.loads(dumped)
+        assert loaded == data
+
+    def test_compress_with_pickle_and_small_data(self):
+        """Сжатие + pickle, но данные меньше порога."""
+        data = {"x": 1, "y": 2}
+        dumped = Serializer.dumps(
+            data,
+            use_pickle=True,
+            compress=True,
+            compress_threshold=1024,
+        )
+        # Не должно быть сжато (маленький размер)
+        assert not dumped.startswith(b"LZ4:")
+        loaded = Serializer.loads(dumped)
+        assert loaded == data
+
+    def test_compress_with_custom_threshold(self):
+        """Сжатие с кастомным порогом."""
+        data = {"key": "x" * 500}
+
+        # Порог 100 → сожмётся
+        dumped_compressed = Serializer.dumps(
+            data, compress=True, compress_threshold=100
+        )
+        assert dumped_compressed.startswith(b"LZ4:")
+
+        # Порог 1000 → не сожмётся
+        dumped_uncompressed = Serializer.dumps(
+            data, compress=True, compress_threshold=1000
+        )
+        assert not dumped_uncompressed.startswith(b"LZ4:")
+
+    def test_compress_none_value(self):
+        """Сжатие None — не должно добавлять LZ4 префикс."""
+        dumped = Serializer.dumps(None, compress=True)
+        assert dumped == b"__NULL__"
+        assert Serializer.loads(dumped) is None
+
+    def test_compress_roundtrip_complex_data(self):
+        """Полный цикл сжатия и распаковки для сложных данных."""
+        now = datetime.now()
+        uid = uuid4()
+        data = {
+            "name": "Project" * 1000,  # Большая строка
+            "created_at": now,
+            "uuid": uid,
+            "price": Decimal("99.90"),
+            "duration": timedelta(hours=2),
+            "active": True,
+            "tags": ["python", "redis"] * 100,  # Большой список
+        }
+
+        dumped = Serializer.dumps(data, compress=True, compress_threshold=1024)
+        assert dumped.startswith(b"LZ4:")
+
+        loaded = Serializer.loads(dumped)
+        assert loaded["name"] == data["name"]
+        assert loaded["created_at"] == now.isoformat()
+        assert loaded["uuid"] == str(uid)
+        assert loaded["price"] == str(Decimal("99.90"))
+        assert loaded["duration"] == timedelta(hours=2).total_seconds()
+        assert loaded["active"] is True
+        assert loaded["tags"] == data["tags"]
+
+    def test_compress_empty_data(self):
+        """Сжатие пустых данных."""
+        data = {}
+        dumped = Serializer.dumps(data, compress=True)
+        # Пустой словарь не сжимается (маленький размер)
+        assert not dumped.startswith(b"LZ4:")
+        loaded = Serializer.loads(dumped)
+        assert loaded == data
+
+    def test_loads_compressed_without_lz4(self):
+        """Попытка распаковать LZ4-данные когда lz4 не установлен."""
+        # Создаём данные с LZ4 префиксом (невалидные)
+        data = b"LZ4:invalid_lz4_data"
+        with pytest.raises(Exception):  # lz4.frame.decompress выбросит ошибку
+            Serializer.loads(data)
+
+    def test_compress_threshold_default(self):
+        """Проверка порога сжатия по умолчанию."""
+        # Данные чуть больше 1024 байт
+        data = {"key": "x" * 1100}
+        dumped = Serializer.dumps(data, compress=True)  # threshold по умолчанию 1024
+        assert dumped.startswith(b"LZ4:")
+
+        # Данные меньше 1024 байт
+        data = {"key": "x" * 100}
+        dumped = Serializer.dumps(data, compress=True)
+        assert not dumped.startswith(b"LZ4:")
+
+    def test_compress_with_non_bytes_data(self):
+        """Сжатие данных, которые не являются байтами."""
+        data = {"key": "value" * 1000}
+        dumped = Serializer.dumps(data, compress=True, compress_threshold=1024)
+        assert dumped.startswith(b"LZ4:")
+        loaded = Serializer.loads(dumped)
+        assert loaded == data

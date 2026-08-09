@@ -50,6 +50,8 @@ class Cache:
         prefix: str | None = None,
         use_pickle: bool = False,
         cache_none: bool = True,
+        compress: bool = False,
+        compress_threshold: int = 1024,
     ) -> Callable[[Callable[P, T]], Callable[P, T]]:
         """
         Декоратор для кэширования асинхронной функции.
@@ -57,12 +59,23 @@ class Cache:
         Args:
             ttl: Время жизни кэша в секундах.
             prefix: Опциональный префикс для ключа кэша.
+                Пример: `prefix="user"` → ключ будет `cache:user:<hash>`.
             use_pickle: Использовать pickle в качестве сериализатора.
+                Включайте, если нужно кэшировать сложные объекты (классы, множества, байты).
+                По умолчанию `False` — используется JSON (быстрее и безопаснее).
             cache_none: Определяет, нужно ли кэшировать результат, если функция вернула `None`.
-                - По умолчанию `True` (для обратной совместимости): `None` кэшируется как специальное значение.
-                - Если `False`, то `None` **не** будет сохранён в кэше. Это полезно для случаев, когда
-                  результат функции может отсутствовать и вы хотите позволить функции выполниться снова,
-                  чтобы получить актуальные данные.
+                - `True` (по умолчанию): `None` кэшируется как специальное значение `__NULL__`.
+                  При повторном вызове вернётся `None` без выполнения функции.
+                - `False`: `None` **не** сохраняется в кэше. Функция будет выполняться каждый раз,
+                  пока не вернёт значение, отличное от `None`.
+                  Полезно для API/БД-запросов, где `None` означает "не найдено".
+            compress: Сжимать данные через lz4 перед сохранением в Redis.
+                Требует установки `lz4`: `pip install simple-redis-cache[lz4]`.
+                Сжатие применяется только если размер данных превышает `compress_threshold`.
+                По умолчанию `False`.
+            compress_threshold: Порог сжатия в байтах.
+                Данные меньше этого значения не сжимаются.
+                По умолчанию `1024` (1KB).
 
         Returns:
             Декоратор, оборачивающий функцию с кэшированием.
@@ -71,16 +84,21 @@ class Cache:
             TypeError: Если функция синхронная, а не асинхронная.
 
         Example:
-            >>> # Кэшировать результат, даже если он `None`
+            >>> # Базовое кэширование
             >>> @cache.cache(ttl=60, prefix="user")
-            >>> async def get_user(user_id: int) -> dict | None:
-            ...     return None
+            >>> async def get_user(user_id: int) -> dict:
+            ...     return {"id": user_id, "name": "Alice"}
             >>>
-            >>> # Не кэшировать результат, если он `None`
+            >>> # Кэширование None
             >>> @cache.cache(ttl=60, prefix="user", cache_none=False)
             >>> async def find_user(email: str) -> dict | None:
-            ...     # Если пользователь не найден, функция вернёт None, но это не будет сохранено в кэше
+            ...     # Если пользователь не найден, вернётся None, но это не будет сохранено
             ...     return None
+            >>>
+            >>> # Кэширование с компрессией
+            >>> @cache.cache(ttl=300, compress=True, compress_threshold=2048)
+            >>> async def get_big_data() -> dict:
+            ...     return {"large": "x" * 10000}  # Будет сжато
         """
 
         def wrapper(func: Callable[P, T]) -> Callable[P, T]:
@@ -115,7 +133,12 @@ class Cache:
                 # --- SET ---
                 if result is not None or cache_none:
                     try:
-                        data_to_cache = Serializer.dumps(result, use_pickle=use_pickle)
+                        data_to_cache = Serializer.dumps(
+                            result,
+                            use_pickle=use_pickle,
+                            compress=compress,
+                            compress_threshold=compress_threshold,
+                        )
                         await self.redis_client.set(cache_key, data_to_cache, ex=ttl)
                         self.logger.debug("Cache saved: %s", cache_key)
                     except Exception as exc:  # pragma: no cover
@@ -139,16 +162,30 @@ class Cache:
         """
         Удаляет все ключи кэша по префиксу.
 
+        Использует `SCAN` для безопасного удаления больших объёмов данных без блокировки Redis.
+
         Args:
-            prefix: Префикс для удаления. Если `"*"` — удаляет все ключи.
-            timeout_seconds: Максимальное время выполнения операции (сек).
+            prefix: Префикс для удаления.
+                - `"*"` (по умолчанию): удаляет все ключи кэша (паттерн `cache:*`).
+                - Любое другое значение: удаляет ключи по паттерну `cache:{prefix}:*`.
+            timeout_seconds: Максимальное время выполнения операции в секундах.
+                Если операция превысит этот лимит, она прервётся с предупреждением.
+                По умолчанию `30` секунд.
 
         Returns:
             Количество удалённых ключей.
 
+        Raises:
+            Exception: Любая ошибка Redis логируется, но не прерывает выполнение.
+
         Example:
+            >>> # Удалить все ключи с префиксом "user"
             >>> await cache.invalidate_cache(prefix="user")
             42
+            >>>
+            >>> # Удалить все ключи кэша
+            >>> await cache.invalidate_cache()
+            157
         """
         if prefix == "*":
             pattern = "cache:*"

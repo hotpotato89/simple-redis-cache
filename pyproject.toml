@@ -7,6 +7,12 @@ requires-python = ">=3.10"
 dependencies = [
     "redis>=8.0.1",
 ]
+
+[project.optional-dependencies]
+lz4 = ["lz4>=4.0.0"]
+
+
+
 license = { file = "LICENSE" }
 authors = [
     { name = "hotpotato89", email = "ramilreading@gmail.com" }
