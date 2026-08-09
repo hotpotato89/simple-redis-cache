@@ -28,3 +28,15 @@ import simple_redis_cache
 
 print(simple_redis_cache.__version__)
 ```
+
+---
+
+# Доп. функционал
+
+## Сжатие данных (LZ4)
+
+Для работы со сжатием данных установите библиотеку с extra-зависимостью lz4:
+
+```bash
+pip install "simple-redis-cache[lz4]"
+```
