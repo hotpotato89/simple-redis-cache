@@ -31,7 +31,7 @@ class Serializer:
             value: Любое Python-значение.
             use_pickle: Использовать pickle вместо JSON.
             compress: Сжимать данные через lz4
-            compress_threshold: Порог сжатия данныъ в битах
+            compress_threshold: Порог сжатия данныъ в байтах
 
         Returns:
             Байтовое представление для сохранения в Redis.
