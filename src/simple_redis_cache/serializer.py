@@ -11,7 +11,10 @@ class Serializer:
 
     NULL_MARKER = b"__NULL__"
     PICKLE_PREFIX = b"PICKLE:"
+    LZ4_PREFIX = b"LZ4:"
     JSON_ENCODER = CustomJSONEncoder
+
+    COMPRESS_THRESHOLD = 1024
 
     @classmethod
     def dumps(cls, value: Any, use_pickle: bool = False) -> bytes:
@@ -57,3 +60,16 @@ class Serializer:
             return json.loads(data.decode("utf-8"))
         except json.JSONDecodeError as exc:
             raise ValueError(f"Failed to deserialize data: {data[:50]}...") from exc
+
+    @classmethod
+    def _compress_data(cls, data: bytes) -> bytes:
+        import lz4.frame
+
+        compressed = lz4.frame.compress(data)
+        return cls.LZ4_PREFIX + compressed
+
+    @classmethod
+    def _decompress_data(cls, data: bytes) -> bytes:
+        import lz4.frame
+
+        return lz4.frame.decompress(data[len(cls.LZ4_PREFIX) :])
