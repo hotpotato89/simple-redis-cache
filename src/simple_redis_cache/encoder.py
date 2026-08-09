@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import date, datetime, time
 from decimal import Decimal
 from typing import Any
 
@@ -33,7 +33,7 @@ class CustomJSONEncoder(json.JSONEncoder):
     """
 
     def default(self, obj: Any) -> Any:
-        if isinstance(obj, datetime):
+        if isinstance(obj, (datetime, date, time)):
             return obj.isoformat()
         if hasattr(obj, "model_dump"):
             return obj.model_dump()
