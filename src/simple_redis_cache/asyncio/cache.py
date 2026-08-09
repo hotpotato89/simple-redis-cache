@@ -99,7 +99,7 @@ class Cache:
                     cached = await self.redis_client.get(cache_key)
                     if cached is not None:
                         self.logger.debug("Cache HIT: %s", cache_key)
-                        if isinstance(cached, str): # pragma: no cover
+                        if isinstance(cached, str):  # pragma: no cover
                             cached = cached.encode("utf-8")
                         return Serializer.loads(cached)
                 except Exception as exc:

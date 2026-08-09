@@ -1,13 +1,11 @@
-import json
-import pickle
-import pytest
-from datetime import datetime, date, time, timedelta
+from datetime import date, datetime, time, timedelta
 from decimal import Decimal
-from uuid import UUID, uuid4
-from typing import Any
+from uuid import uuid4
 
-from simple_redis_cache.serializer import Serializer
+import pytest
+
 from simple_redis_cache.encoder import CustomJSONEncoder
+from simple_redis_cache.serializer import Serializer
 
 
 class TestSerializer:
@@ -74,6 +72,7 @@ class TestSerializer:
 
     def test_dumps_loads_pickle(self):
         """Сериализация через pickle."""
+
         class CustomObject:
             def __init__(self, x: int, y: str):
                 self.x = x
