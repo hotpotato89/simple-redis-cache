@@ -825,6 +825,73 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#serializer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Serializer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Serializer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Константы
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Методы
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Методы">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dumps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dumps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        loads
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#customjsonencoder" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -837,7 +904,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         Пример
@@ -849,6 +916,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Исключения
+      
+    </span>
+  </a>
   
 </li>
       
@@ -999,6 +1077,73 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#serializer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Serializer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Serializer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Константы
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Методы
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Методы">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dumps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dumps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        loads
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#customjsonencoder" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1011,7 +1156,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         Пример
@@ -1023,6 +1168,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Исключения
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1057,18 +1213,69 @@
 <li><code>logger</code> - опциональный логгер.</li>
 </ul>
 <h3 id="cache_1"><code>cache</code></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ttl</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">use_pickle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">cache_none</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">cache</span><span class="p">(</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">ttl</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">use_pickle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">cache_none</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">compress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">compress_threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span>
 </code></pre></div>
 <h4 id="_2">Аргументы</h4>
-<ul>
-<li><code>ttl</code> - время жизни кэша в секундах.</li>
-<li><code>prefix</code> - опциональный префикс для ключа.</li>
-<li><code>use_pickle</code> - использовать <code>pickle</code> для сериализации.</li>
-<li><code>cache_none</code> - кэшировать значение <code>None</code></li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Тип</th>
+<th>По умолчанию</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ttl</code></td>
+<td><code>int</code></td>
+<td><strong>обязательный</strong></td>
+<td>Время жизни кэша в секундах</td>
+</tr>
+<tr>
+<td><code>prefix</code></td>
+<td><code>str \| None</code></td>
+<td><code>None</code></td>
+<td>Опциональный префикс для ключа</td>
+</tr>
+<tr>
+<td><code>use_pickle</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Использовать <code>pickle</code> для сериализации</td>
+</tr>
+<tr>
+<td><code>cache_none</code></td>
+<td><code>bool</code></td>
+<td><code>True</code></td>
+<td>Кэшировать значение <code>None</code></td>
+</tr>
+<tr>
+<td><code>compress</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Сжимать данные через lz4</td>
+</tr>
+<tr>
+<td><code>compress_threshold</code></td>
+<td><code>int</code></td>
+<td><code>1024</code></td>
+<td>Минимальный размер данных для сжатия (в байтах)</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
-<p>Опасно: Не используйте <code>pickle</code> для недоверенных данных. Это может выполнить произвольный код.</p>
-<p>Важно: Не используйте decode_responses=True в Redis-клиенте при включённом use_pickle=True.</p>
+<p>⚠️ <strong>Опасно:</strong> Не используйте <code>pickle</code> для недоверенных данных. Это может выполнить произвольный код.</p>
+<p>⚠️ <strong>Важно:</strong> Не используйте <code>decode_responses=True</code> в Redis-клиенте при включённом <code>use_pickle=True</code>.</p>
+<p>💡 <strong>Требование:</strong> Для использования <code>compress=True</code> установите <code>pip install simple-redis-cache[lz4]</code>.</p>
 </blockquote>
 <h3 id="invalidate_cache"><code>invalidate_cache</code></h3>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">invalidate_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">timeout_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span>
@@ -1080,36 +1287,147 @@
 <li><code>timeout_seconds</code> - время, отведенное на выполнение инвалидации.</li>
 </ul>
 <p><strong>Возвращает</strong>: удаленное количество ключей.</p>
+<hr />
 <h2 id="cache_2"><code>Cache</code> (асинхронный)</h2>
-<p>Аналогичный, но методы асинхронные</p>
+<p>Аналогичный синхронному, но методы асинхронные.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">simple_redis_cache.asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cache</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">cache</span> <span class="o">=</span> <span class="n">Cache</span><span class="p">(</span><span class="n">redis</span><span class="p">)</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nd">@cache</span><span class="o">.</span><span class="n">cache</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nd">@cache</span><span class="o">.</span><span class="n">cache</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">user_id</span><span class="p">}</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">await</span> <span class="n">cache</span><span class="o">.</span><span class="n">invalidate_cache</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="customjsonencoder"><code>CustomJSONEncoder</code></h2>
-<p>Кастомный JSON-энкодер для поддержки:</p>
-<ul>
-<li><code>datetime</code> -&gt; ISO-строка</li>
-<li><code>Decimal</code> -&gt; float</li>
-<li><code>UUID</code> -&gt; строка</li>
-<li><code>Pydantic-модели</code> -&gt; <code>model_dump()</code></li>
-</ul>
-<h3 id="_4">Пример</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">simple_redis_cache.encoder</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomJSONEncoder</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;created&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()}</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">CustomJSONEncoder</span><span class="p">)</span>
+<hr />
+<h2 id="serializer"><code>Serializer</code></h2>
+<p>Отвечает за сериализацию/десериализацию данных.</p>
+<h3 id="_4">Константы</h3>
+<table>
+<thead>
+<tr>
+<th>Константа</th>
+<th>Значение</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NULL_MARKER</code></td>
+<td><code>b"__NULL__"</code></td>
+<td>Маркер для <code>None</code></td>
+</tr>
+<tr>
+<td><code>PICKLE_PREFIX</code></td>
+<td><code>b"PICKLE:"</code></td>
+<td>Префикс для pickle-данных</td>
+</tr>
+<tr>
+<td><code>LZ4_PREFIX</code></td>
+<td><code>b"LZ4:"</code></td>
+<td>Префикс для сжатых данных</td>
+</tr>
+<tr>
+<td><code>COMPRESS_THRESHOLD</code></td>
+<td><code>1024</code></td>
+<td>Порог сжатия по умолчанию</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_5">Методы</h3>
+<h4 id="dumps"><code>dumps</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nd">@classmethod</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">dumps</span><span class="p">(</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="bp">cls</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">use_pickle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">compress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">compress_threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span>
 </code></pre></div>
+<p>Сериализует значение в байты.</p>
+<h4 id="loads"><code>loads</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nd">@classmethod</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">loads</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span>
+</code></pre></div>
+<p>Десериализует байты обратно в Python-объект.</p>
+<hr />
+<h2 id="customjsonencoder"><code>CustomJSONEncoder</code></h2>
+<p>Кастомный JSON-энкодер для поддержки дополнительных типов:</p>
+<table>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Формат</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>datetime</code></td>
+<td>ISO-строка (<code>2026-08-09T15:30:45</code>)</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td>ISO-строка (<code>2026-08-09</code>)</td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>ISO-строка (<code>15:30:45.123456</code>)</td>
+</tr>
+<tr>
+<td><code>timedelta</code></td>
+<td>Количество секунд (<code>float</code>)</td>
+</tr>
+<tr>
+<td><code>Decimal</code></td>
+<td>Строка (<code>"99.90"</code>)</td>
+</tr>
+<tr>
+<td><code>UUID</code></td>
+<td>Строка (<code>"550e8400-..."</code>)</td>
+</tr>
+<tr>
+<td>Pydantic-модели</td>
+<td><code>model_dump()</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="_6">Пример</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">simple_redis_cache.encoder</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomJSONEncoder</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="s2">&quot;created&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;99.90&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">}</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">CustomJSONEncoder</span><span class="p">)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># &#39;{&quot;created&quot;: &quot;2026-08-09T15:30:45&quot;, &quot;price&quot;: &quot;99.90&quot;}&#39;</span>
+</code></pre></div>
+<hr />
+<h2 id="_7">Исключения</h2>
+<table>
+<thead>
+<tr>
+<th>Исключение</th>
+<th>Когда возникает</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TypeError</code></td>
+<td>Декоратор применён к функции не того типа (sync/async)</td>
+</tr>
+<tr>
+<td><code>ValueError</code></td>
+<td>Некорректные данные при десериализации</td>
+</tr>
+</tbody>
+</table>
 
 
 
