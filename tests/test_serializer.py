@@ -8,6 +8,16 @@ from simple_redis_cache.encoder import CustomJSONEncoder
 from simple_redis_cache.serializer import Serializer
 
 
+# --- Класс для теста pickle (на уровне модуля) ---
+class CustomObject:
+    def __init__(self, x: int, y: str):
+        self.x = x
+        self.y = y
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+
 class TestSerializer:
     """Тесты для сериализатора."""
 
@@ -72,16 +82,7 @@ class TestSerializer:
 
     def test_dumps_loads_pickle(self):
         """Сериализация через pickle."""
-
-        class CustomObject:
-            def __init__(self, x: int, y: str):
-                self.x = x
-                self.y = y
-
-            def __eq__(self, other):
-                return self.x == other.x and self.y == other.y
-
-        obj = CustomObject(42, "test")
+        obj = CustomObject(42, "test")  # ← класс на уровне модуля
         dumped = Serializer.dumps(obj, use_pickle=True)
 
         assert dumped.startswith(b"PICKLE:")
