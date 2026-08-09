@@ -1,7 +1,5 @@
 import asyncio
 import inspect
-import json
-import pickle
 from collections.abc import Callable
 from functools import wraps
 from logging import Logger, getLogger
@@ -9,8 +7,8 @@ from typing import ParamSpec, TypeVar, cast
 
 from redis.asyncio import Redis
 
-from simple_redis_cache.encoder import CustomJSONEncoder
 from simple_redis_cache.key_generator import gen_cache_key
+from simple_redis_cache.serializer import Serializer
 
 T = TypeVar("T")
 P = ParamSpec("P")
@@ -96,20 +94,14 @@ class Cache:
             async def inner(*args: P.args, **kwargs: P.kwargs) -> T:
                 cache_key = gen_cache_key(func, args, kwargs, prefix)
 
+                # --- GET ---
                 try:
                     cached = await self.redis_client.get(cache_key)
                     if cached is not None:
                         self.logger.debug("Cache HIT: %s", cache_key)
-
-                        # Приводим к bytes если это str
-                        if isinstance(cached, str):  # pragma: no cover
+                        if isinstance(cached, str):
                             cached = cached.encode("utf-8")
-
-                        if cached == b"__NULL__" and cache_none:
-                            return None  # type: ignore
-                        if cached.startswith(b"PICKLE:"):  # type: ignore
-                            return pickle.loads(cached[7:])  # type: ignore
-                        return json.loads(cached.decode("utf-8"))  # type: ignore
+                        return Serializer.loads(cached)
                 except Exception as exc:
                     self.logger.warning(
                         "Failed cache get for key: %s",
@@ -117,30 +109,21 @@ class Cache:
                         exc_info=exc,
                     )
 
+                # --- Вычисляем результат ---
                 result = await func(*args, **kwargs)
 
-                try:
-                    if result is None and not cache_none:
-                        pass
-                    else:
-                        if result is None and cache_none:
-                            data_to_cache = b"__NULL__"
-                        else:
-                            if use_pickle:
-                                data_to_cache = b"PICKLE:" + pickle.dumps(result)
-                            else:
-                                data_to_cache = json.dumps(
-                                    result,
-                                    cls=CustomJSONEncoder,
-                                )
+                # --- SET ---
+                if result is not None or cache_none:
+                    try:
+                        data_to_cache = Serializer.dumps(result, use_pickle=use_pickle)
                         await self.redis_client.set(cache_key, data_to_cache, ex=ttl)
                         self.logger.debug("Cache saved: %s", cache_key)
-                except Exception as exc:  # pragma: no cover
-                    self.logger.warning(
-                        "Failed cache set for key: %s",
-                        cache_key,
-                        exc_info=exc,
-                    )
+                    except Exception as exc:  # pragma: no cover
+                        self.logger.warning(
+                            "Failed cache set for key: %s",
+                            cache_key,
+                            exc_info=exc,
+                        )
 
                 return result
 
