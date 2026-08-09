@@ -40,5 +40,5 @@ class CustomJSONEncoder(json.JSONEncoder):
         if hasattr(obj, "hex"):
             return str(obj)
         if isinstance(obj, Decimal):
-            return float(obj)
+            return str(obj)
         return super().default(obj)
